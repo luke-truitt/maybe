@@ -1,5 +1,5 @@
 module ApplicationHelper
-  include Pagy::Frontend
+  include Pagy::HelperLoader
 
   def styled_form_with(**options, &block)
     options[:builder] = StyledFormBuilder
@@ -73,14 +73,6 @@ module ApplicationHelper
               .transform_values { |item| calculate_total(item, money_method, negate) }
               .map { |_currency, money| format_money(money) }
               .join(separator)
-  end
-
-  def show_super_admin_bar?
-    if params[:admin].present?
-      cookies.permanent[:admin] = params[:admin]
-    end
-
-    cookies[:admin] == "true"
   end
 
   # Renders Markdown text using Redcarpet

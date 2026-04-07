@@ -37,15 +37,4 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_nil Session.find_by(id: session_record.id)
   end
 
-  test "redirects to MFA verification when MFA enabled" do
-    @user.setup_mfa!
-    @user.enable_mfa!
-    @user.sessions.destroy_all # Clean up any existing sessions
-
-    post sessions_path, params: { email: @user.email, password: user_password_test }
-
-    assert_redirected_to verify_mfa_path
-    assert_equal @user.id, session[:mfa_user_id]
-    assert_not Session.exists?(user_id: @user.id)
-  end
 end

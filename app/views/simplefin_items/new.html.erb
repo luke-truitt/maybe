@@ -1,0 +1,26 @@
+<%= render layout: "accounts/new/container", locals: { title: "Connect with SimpleFIN", back_path: new_account_path } do %>
+  <div class="space-y-4">
+    <p class="text-sm text-secondary">
+      Connect your bank accounts automatically using SimpleFIN Bridge.
+    </p>
+
+    <ol class="text-sm text-secondary space-y-2 list-decimal list-inside">
+      <li>Go to <a href="https://beta-bridge.simplefin.org/simplefin/create" target="_blank" class="text-primary underline">SimpleFIN Bridge</a> and create an account ($10/year)</li>
+      <li>Add your bank and generate a Setup Token</li>
+      <li>Paste the token below</li>
+    </ol>
+
+    <%= form_with url: simplefin_items_path, method: :post, class: "space-y-4", data: { turbo_frame: "_top" } do |f| %>
+      <div>
+        <%= f.label :setup_token, "Setup Token", class: "block text-sm font-medium text-primary mb-1" %>
+        <%= f.text_area :setup_token,
+              rows: 3,
+              required: true,
+              placeholder: "Paste your SimpleFIN setup token here...",
+              class: "w-full rounded-lg border border-secondary bg-container text-sm p-3 focus:ring-1 focus:ring-primary focus:border-primary" %>
+      </div>
+
+      <%= f.submit "Connect", class: "cursor-pointer w-full py-2 px-4 bg-inverse fg-inverse rounded-lg text-sm font-medium hover:bg-inverse-hover" %>
+    <% end %>
+  </div>
+<% end %>

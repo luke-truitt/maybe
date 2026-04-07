@@ -1,5 +1,5 @@
 class Assistant::Function::GetTransactions < Assistant::Function
-  include Pagy::Backend
+  include Pagy::Method
 
   class << self
     def default_page_size

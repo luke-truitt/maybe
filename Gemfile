@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby file: ".ruby-version"
 
 # Rails
-gem "rails", "~> 7.2.2"
+gem "rails", "~> 7.2.2", ">= 7.2.2.2"
 
 # Drivers
 gem "pg", "~> 1.5"
@@ -50,11 +50,9 @@ gem "image_processing", ">= 1.2"
 # Other
 gem "ostruct"
 gem "bcrypt", "~> 3.1"
-gem "jwt"
 gem "jbuilder"
 
-# OAuth & API Security
-gem "doorkeeper"
+gem "rack", ">= 3.1.17"
 gem "rack-attack", "~> 6.6"
 gem "faraday"
 gem "faraday-retry"
@@ -66,11 +64,7 @@ gem "rails-settings-cached"
 gem "tzinfo-data", platforms: %i[windows jruby]
 gem "csv"
 gem "redcarpet"
-gem "stripe"
-gem "intercom-rails"
-gem "plaid"
-gem "rotp", "~> 6.3"
-gem "rqrcode", "~> 3.0"
+# gem "plaid" # Disabled — using SimpleFIN instead
 gem "activerecord-import"
 gem "rubyzip", "~> 2.3"
 
@@ -79,7 +73,7 @@ gem "aasm"
 gem "after_commit_everywhere", "~> 1.0"
 
 # AI
-gem "ruby-openai"
+# gem "anthropic" # Uncomment to enable AI features
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows]
@@ -107,6 +101,7 @@ group :development do
 end
 
 group :test do
+  gem "minitest", "~> 5.25"
   gem "capybara"
   gem "selenium-webdriver"
   gem "mocha"

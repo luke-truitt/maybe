@@ -9,6 +9,7 @@ export default class extends Controller {
     "expandedTransition",
     "collapsedTransition",
   ];
+  static values = { userId: String };
 
   openMobileSidebar() {
     this.mobileSidebarTarget.classList.remove("hidden");
@@ -19,15 +20,19 @@ export default class extends Controller {
   }
 
   toggleLeftSidebar() {
-    const isOpen = this.leftSidebarTarget.classList.contains("w-full");
+    const isOpen = this.#isSidebarExpanded(this.leftSidebarTarget);
     this.#updateUserPreference("show_sidebar", !isOpen);
     this.#toggleSidebarWidth(this.leftSidebarTarget, isOpen);
   }
 
   toggleRightSidebar() {
-    const isOpen = this.rightSidebarTarget.classList.contains("w-full");
+    const isOpen = this.#isSidebarExpanded(this.rightSidebarTarget);
     this.#updateUserPreference("show_ai_sidebar", !isOpen);
     this.#toggleSidebarWidth(this.rightSidebarTarget, isOpen);
+  }
+
+  #isSidebarExpanded(el) {
+    return this.expandedSidebarClasses.some(cls => el.classList.contains(cls));
   }
 
   #toggleSidebarWidth(el, isCurrentlyOpen) {

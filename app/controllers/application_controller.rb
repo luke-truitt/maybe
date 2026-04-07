@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
-  include RestoreLayoutPreferences, Onboardable, Localize, AutoSync, Authentication, Invitable,
-          SelfHostable, StoreLocation, Impersonatable, Breadcrumbable,
+  include RestoreLayoutPreferences, Onboardable, Localize, AutoSync, Authentication,
+          SelfHostable, StoreLocation, Breadcrumbable,
           FeatureGuardable, Notifiable
 
-  include Pagy::Backend
+  include Pagy::Method
 
   before_action :detect_os
   before_action :set_default_chat

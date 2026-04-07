@@ -9,7 +9,7 @@ module SelfHostable
 
   private
     def self_hosted?
-      Rails.configuration.app_mode.self_hosted?
+      true
     end
 
     def self_hosted_first_login?

@@ -1,11 +1,6 @@
 ---
 en:
   settings:
-    billings:
-      show:
-        page_title: Billing
-        subscription_subtitle: Update your subscription and billing details
-        subscription_title: Manage subscription
     preferences:
       show:
         country: Country
@@ -70,8 +65,6 @@ en:
         page_title: Security
     settings_nav:
       accounts_label: Accounts
-      api_key_label: API Key
-      billing_label: Billing
       categories_label: Categories
       feedback_label: Feedback
       general_section_title: General

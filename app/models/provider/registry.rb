@@ -23,15 +23,6 @@ class Provider::Registry
     end
 
     private
-      def stripe
-        secret_key = ENV["STRIPE_SECRET_KEY"]
-        webhook_secret = ENV["STRIPE_WEBHOOK_SECRET"]
-
-        return nil unless secret_key.present? && webhook_secret.present?
-
-        Provider::Stripe.new(secret_key:, webhook_secret:)
-      end
-
       def synth
         api_key = ENV.fetch("SYNTH_API_KEY", Setting.synth_api_key)
 
@@ -60,12 +51,12 @@ class Provider::Registry
         Provider::Github.new
       end
 
-      def openai
-        access_token = ENV.fetch("OPENAI_ACCESS_TOKEN", Setting.openai_access_token)
+      def anthropic
+        api_key = ENV.fetch("ANTHROPIC_API_KEY", Setting.anthropic_api_key)
 
-        return nil unless access_token.present?
+        return nil unless api_key.present?
 
-        Provider::Openai.new(access_token)
+        Provider::Anthropic.new(api_key)
       end
   end
 
@@ -96,9 +87,9 @@ class Provider::Registry
       when :securities
         %i[synth]
       when :llm
-        %i[openai]
+        %i[anthropic]
       else
-        %i[synth plaid_us plaid_eu github openai]
+        %i[synth plaid_us plaid_eu github anthropic]
       end
     end
 end

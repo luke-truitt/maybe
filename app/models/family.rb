@@ -1,5 +1,5 @@
 class Family < ApplicationRecord
-  include PlaidConnectable, Syncable, AutoTransferMatchable, Subscribeable
+  include PlaidConnectable, Syncable, AutoTransferMatchable
 
   DATE_FORMATS = [
     [ "MM-DD-YYYY", "%m-%d-%Y" ],
@@ -15,8 +15,7 @@ class Family < ApplicationRecord
 
   has_many :users, dependent: :destroy
   has_many :accounts, dependent: :destroy
-  has_many :invitations, dependent: :destroy
-
+  has_many :simplefin_items, dependent: :destroy
   has_many :imports, dependent: :destroy
   has_many :family_exports, dependent: :destroy
 
@@ -115,6 +114,6 @@ class Family < ApplicationRecord
   end
 
   def self_hoster?
-    Rails.application.config.app_mode.self_hosted?
+    true
   end
 end

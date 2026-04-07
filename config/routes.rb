@@ -2,13 +2,6 @@ require "sidekiq/web"
 require "sidekiq/cron/web"
 
 Rails.application.routes.draw do
-  use_doorkeeper
-  # MFA routes
-  resource :mfa, controller: "mfa", only: [ :new, :create ] do
-    get :verify
-    post :verify, to: "mfa#verify_code"
-    delete :disable
-  end
 
   mount Lookbook::Engine, at: "/design-system"
 
@@ -30,8 +23,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get "changelog", to: "pages#changelog"
-  get "feedback", to: "pages#feedback"
 
   resource :current_session, only: %i[update]
 
@@ -50,7 +41,6 @@ Rails.application.routes.draw do
     collection do
       get :preferences
       get :goals
-      get :trial
     end
   end
 
@@ -60,17 +50,9 @@ Rails.application.routes.draw do
     resource :hosting, only: %i[show update] do
       delete :clear_cache, on: :collection
     end
-    resource :billing, only: :show
     resource :security, only: :show
-    resource :api_key, only: [ :show, :new, :create, :destroy ]
   end
 
-  resource :subscription, only: %i[new show create] do
-    collection do
-      get :upgrade
-      get :success
-    end
-  end
 
   resources :tags, except: :show do
     resources :deletions, only: %i[new create], module: :tag
@@ -194,67 +176,17 @@ Rails.application.routes.draw do
 
   resources :securities, only: :index
 
-  resources :invite_codes, only: %i[index create]
 
-  resources :invitations, only: [ :new, :create, :destroy ] do
-    get :accept, on: :member
-  end
-
-  # API routes
-  namespace :api do
-    namespace :v1 do
-      # Authentication endpoints
-      post "auth/signup", to: "auth#signup"
-      post "auth/login", to: "auth#login"
-      post "auth/refresh", to: "auth#refresh"
-
-      # Production API endpoints
-      resources :accounts, only: [ :index ]
-      resources :transactions, only: [ :index, :show, :create, :update, :destroy ]
-      resource :usage, only: [ :show ], controller: "usage"
-
-      resources :chats, only: [ :index, :show, :create, :update, :destroy ] do
-        resources :messages, only: [ :create ] do
-          post :retry, on: :collection
-        end
-      end
-
-      # Test routes for API controller testing (only available in test environment)
-      if Rails.env.test?
-        get "test", to: "test#index"
-        get "test_not_found", to: "test#not_found"
-        get "test_family_access", to: "test#family_access"
-        get "test_scope_required", to: "test#scope_required"
-        get "test_multiple_scopes_required", to: "test#multiple_scopes_required"
-      end
-    end
-  end
 
 
 
   resources :currencies, only: %i[show]
 
-  resources :impersonation_sessions, only: [ :create ] do
-    post :join, on: :collection
-    delete :leave, on: :collection
 
-    member do
-      put :approve
-      put :reject
-      put :complete
-    end
-  end
-
-  resources :plaid_items, only: %i[new edit create destroy] do
+  resources :simplefin_items, only: %i[new create destroy] do
     member do
       post :sync
     end
-  end
-
-  namespace :webhooks do
-    post "plaid"
-    post "plaid_eu"
-    post "stripe"
   end
 
   get "redis-configuration-error", to: "pages#redis_configuration_error"

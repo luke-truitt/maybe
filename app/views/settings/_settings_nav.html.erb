@@ -6,9 +6,7 @@ nav_sections = [
       { label: t(".profile_label"), path: settings_profile_path, icon: "circle-user" },
       { label: t(".preferences_label"), path: settings_preferences_path, icon: "bolt" },
       { label: t(".security_label"), path: settings_security_path, icon: "shield-check" },
-      { label: "API Key", path: settings_api_key_path, icon: "key" },
-      { label: t(".self_hosting_label"), path: settings_hosting_path, icon: "database", if: self_hosted? },
-      { label: t(".billing_label"), path: settings_billing_path, icon: "circle-dollar-sign", if: !self_hosted? },
+      { label: t(".self_hosting_label"), path: settings_hosting_path, icon: "database" },
       { label: t(".accounts_label"), path: accounts_path, icon: "layers" },
       { label: t(".imports_label"), path: imports_path, icon: "download" }
     ]
@@ -22,13 +20,6 @@ nav_sections = [
       { label: t(".merchants_label"), path: family_merchants_path, icon: "store" }
     ]
   },
-  {
-    header: t(".other_section_title"),
-    items: [
-      { label: t(".whats_new_label"), path: changelog_path, icon: "box" },
-      { label: t(".feedback_label"), path: feedback_path, icon: "megaphone" }
-    ]
-  }
 ]
 %>
 

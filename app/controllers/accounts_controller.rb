@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
 
   def index
     @manual_accounts = family.accounts.manual.alphabetically
-    @plaid_items = family.plaid_items.ordered
+    @simplefin_items = family.simplefin_items.order(created_at: :desc)
 
     render layout: "settings"
   end

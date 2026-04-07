@@ -5,11 +5,6 @@ class User < ApplicationRecord
   belongs_to :last_viewed_chat, class_name: "Chat", optional: true
   has_many :sessions, dependent: :destroy
   has_many :chats, dependent: :destroy
-  has_many :api_keys, dependent: :destroy
-  has_many :mobile_devices, dependent: :destroy
-  has_many :invitations, foreign_key: :inviter_id, dependent: :destroy
-  has_many :impersonator_support_sessions, class_name: "ImpersonationSession", foreign_key: :impersonator_id, dependent: :destroy
-  has_many :impersonated_support_sessions, class_name: "ImpersonationSession", foreign_key: :impersonated_id, dependent: :destroy
   accepts_nested_attributes_for :family, update_only: true
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -57,11 +52,6 @@ class User < ApplicationRecord
     end
   end
 
-  def request_impersonation_for(user_id)
-    impersonated = User.find(user_id)
-    impersonator_support_sessions.create!(impersonated: impersonated)
-  end
-
   def admin?
     super_admin? || role == "admin"
   end
@@ -87,7 +77,7 @@ class User < ApplicationRecord
   end
 
   def ai_available?
-    !Rails.application.config.app_mode.self_hosted? || ENV["OPENAI_ACCESS_TOKEN"].present?
+    false # AI disabled — uncomment anthropic gem and set ANTHROPIC_API_KEY to re-enable
   end
 
   def ai_enabled?
@@ -118,41 +108,6 @@ class User < ApplicationRecord
     else
       destroy
     end
-  end
-
-  # MFA
-  def setup_mfa!
-    update!(
-      otp_secret: ROTP::Base32.random(32),
-      otp_required: false,
-      otp_backup_codes: []
-    )
-  end
-
-  def enable_mfa!
-    update!(
-      otp_required: true,
-      otp_backup_codes: generate_backup_codes
-    )
-  end
-
-  def disable_mfa!
-    update!(
-      otp_secret: nil,
-      otp_required: false,
-      otp_backup_codes: []
-    )
-  end
-
-  def verify_otp?(code)
-    return false if otp_secret.blank?
-    return true if verify_backup_code?(code)
-    totp.verify(code, drift_behind: 15)
-  end
-
-  def provisioning_uri
-    return nil unless otp_secret.present?
-    totp.provisioning_uri(email)
   end
 
   def onboarded?
@@ -187,25 +142,4 @@ class User < ApplicationRecord
       end
     end
 
-    def totp
-      ROTP::TOTP.new(otp_secret, issuer: "Maybe Finance")
-    end
-
-    def verify_backup_code?(code)
-      return false if otp_backup_codes.blank?
-
-      # Find and remove the used backup code
-      if (index = otp_backup_codes.index(code))
-        remaining_codes = otp_backup_codes.dup
-        remaining_codes.delete_at(index)
-        update_column(:otp_backup_codes, remaining_codes)
-        true
-      else
-        false
-      end
-    end
-
-    def generate_backup_codes
-      8.times.map { SecureRandom.hex(4) }
-    end
 end

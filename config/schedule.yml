@@ -7,6 +7,12 @@ import_market_data:
     mode: "full"
     clear_cache: false
   
+sync_simplefin:
+  cron: "0 6 * * *" # 6:00 AM daily
+  class: "SyncSimplefinItemsJob"
+  queue: "scheduled"
+  description: "Syncs all SimpleFIN connections daily"
+
 clean_syncs:
   cron: "0 * * * *" # every hour
   class: "SyncCleanerJob"

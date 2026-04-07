@@ -9,13 +9,8 @@ class SessionsController < ApplicationController
 
   def create
     if user = User.authenticate_by(email: params[:email], password: params[:password])
-      if user.otp_required?
-        session[:mfa_user_id] = user.id
-        redirect_to verify_mfa_path
-      else
-        @session = create_session_for(user)
-        redirect_to root_path
-      end
+      @session = create_session_for(user)
+      redirect_to root_path
     else
       flash.now[:alert] = t(".invalid_credentials")
       render :new, status: :unprocessable_entity
